@@ -7,9 +7,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{66D3A37E-B
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WPF", "WPF", "{C8990AF8-7A84-4C65-85CD-3FCCBBD7E140}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Explorer.WPF.UI", "WPF\Explorer.WPF.UI\Explorer.WPF.UI.csproj", "{204ABC3C-45C0-4671-8A01-BBF756CBAA73}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Explorer.WPF.UI", "WPF\Explorer.WPF.UI\Explorer.WPF.UI.csproj", "{204ABC3C-45C0-4671-8A01-BBF756CBAA73}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eplorer.Shared.VievModels", "Core\Eplorer.Shared.VievModels\Eplorer.Shared.VievModels.csproj", "{0A250BE6-9920-4246-88B4-BF691CBDF378}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Eplorer.Shared.ViewModels", "Core\Eplorer.Shared.VievModels\Eplorer.Shared.ViewModels.csproj", "{0A250BE6-9920-4246-88B4-BF691CBDF378}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
