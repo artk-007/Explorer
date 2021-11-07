@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Core\Eplorer.Shared.VievModels\Eplorer.Shared.ViewModels.csproj" />
+    <ProjectReference Include="..\..\Core\Explorer.Shared.ViewModels\Explorer.Shared.ViewModels.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace Eplorer.Shared.ViewModels
+namespace Explorer.Shared.ViewModels
 {
     public sealed class DirectoryViewModel : FileEntityViewModel
     {       

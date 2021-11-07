@@ -1,7 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace Eplorer.Shared.ViewModels
+namespace Explorer.Shared.ViewModels
 {
     public class MainViewModel : BaseViewModel
     {
@@ -19,26 +19,16 @@ namespace Eplorer.Shared.ViewModels
 
         #endregion
 
-        #region Comands
-
-        public DelegateCommand AddTabItemCommand { get;}
-
-        #endregion
-
         #region Constructor
 
         public MainViewModel()
         {
             AddTabItemCommand = new DelegateCommand(OnAddTabItem);
-            
+
+            CloseCommand = new DelegateCommand(OnClose);
+
             AddTabItemViewModel();
 
-            
-        }
-
-        private void OnAddTabItem(object obj)
-        {
-            AddTabItemViewModel();
         }
 
         #endregion
@@ -53,6 +43,18 @@ namespace Eplorer.Shared.ViewModels
 
         #region Commands Methods
 
+        private void OnAddTabItem(object obj)
+        {
+            AddTabItemViewModel();
+        }
+
+        private void OnClose(object obj)
+        {
+            if (obj is DirectoryTabItemViewModel directoryTabItemViewModel)
+            {
+                CloseTab(directoryTabItemViewModel);
+            }
+        }
 
         #endregion
 
@@ -62,31 +64,29 @@ namespace Eplorer.Shared.ViewModels
         {
             var vm = new DirectoryTabItemViewModel();
 
-            vm.Closed += Vm_Closed;
-
             DirectoryTabItems.Add(vm);
 
             CurrentDirectoryTabItem = vm;
         }
 
-        private void Vm_Closed(object sender, System.IO.ErrorEventArgs e)
-        {
-            if (sender is DirectoryTabItemViewModel directoryTabItemViewModel)
-            {
-                CloseTab(directoryTabItemViewModel);
-            }
-        }
-
         private void CloseTab(DirectoryTabItemViewModel directoryTabItemViewModel)
         {
-            directoryTabItemViewModel.Closed -= Vm_Closed;
-
             DirectoryTabItems.Remove(directoryTabItemViewModel);
 
             CurrentDirectoryTabItem = DirectoryTabItems.FirstOrDefault();
         }
 
         #endregion
+
+        #region Comands
+
+        public DelegateCommand AddTabItemCommand { get; }
+
+        public DelegateCommand CloseCommand { get; }
+
+        #endregion
+        
+        
 
         
     }

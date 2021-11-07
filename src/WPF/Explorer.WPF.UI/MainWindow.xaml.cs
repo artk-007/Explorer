@@ -1,5 +1,5 @@
 ﻿using System.Windows;
-using Eplorer.Shared.ViewModels;
+using Explorer.Shared.ViewModels;
 
 namespace Explorer.WPF.UI
 {

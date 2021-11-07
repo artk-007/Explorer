@@ -7,6 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     
+    
         <Grid>
         
             <Grid.RowDefinitions>
@@ -14,12 +15,12 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
         
-            <TextBox Text="{Binding FilePath}" />
+            
 
             <ListBox Grid.Row="1" 
                      ItemsSource="{Binding DirectoriesAndFiles}"
                      SelectedItem="{Binding SelectedFileEntity}">
-
+                
                 <b:Interaction.Triggers>
                     <b:EventTrigger EventName="MouseDoubleClick">
                         <b:InvokeCommandAction
@@ -34,6 +35,7 @@
                         </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
+                
             </ListBox>
         </Grid>
     
