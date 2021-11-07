@@ -43,7 +43,12 @@ namespace Eplorer.Shared.ViewModels
 
         #endregion
 
-        #region Protected Methods
+        #region Public Methods
+        public void ApplicationClosing()
+        {
+
+        }
+
         #endregion
 
         #region Commands Methods
@@ -82,5 +87,7 @@ namespace Eplorer.Shared.ViewModels
         }
 
         #endregion
+
+        
     }
 }   
