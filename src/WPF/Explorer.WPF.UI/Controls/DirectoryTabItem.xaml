@@ -17,7 +17,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-        
+            
             
 
             <ListBox Grid.Row="1" 
@@ -27,7 +27,7 @@
                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                      HorizontalContentAlignment="Center"
                      VerticalContentAlignment="Center">
-
+            
                 <ListBox.ItemContainerStyle>
                 <Style TargetType="{x:Type ListBoxItem}">
                     <Setter Property="SnapsToDevicePixels" Value="True"/>
@@ -102,6 +102,7 @@
                             CommandParameter ="{Binding SelectedFileEntity}"/>
                     </b:EventTrigger>
                 </b:Interaction.Triggers>
+
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Grid Background="Transparent">
@@ -122,6 +123,7 @@
                 </ListBox.ItemTemplate>
                 
             </ListBox>
+
         </Grid>
     
 </UserControl>
