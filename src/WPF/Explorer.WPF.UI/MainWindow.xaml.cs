@@ -1,10 +1,10 @@
-﻿using System.Windows;
-using Explorer.Shared.ViewModels;
+﻿using System.ComponentModel;
+using System.Windows;
+using ExplorER;
 
 namespace Explorer.WPF.UI
 {
-   
-    public partial class MainWindow 
+    public partial class MainWindow
     {
         private readonly MainViewModel _mainVm;
 
@@ -12,32 +12,21 @@ namespace Explorer.WPF.UI
         {
             InitializeComponent();
             
-            _mainVm = new MainViewModel();
+            _mainVm = ExplorerEr.Instance.MainViewModel;
+
             DataContext = _mainVm;
         }
 
-        private void CloseButton_OnClick(object sender, RoutedEventArgs e)
+        protected override void OnClosing(CancelEventArgs e)
         {
             _mainVm.ApplicationClosing();
 
-            Application.Current.Shutdown();
+            System.Windows.Application.Current.Shutdown();
+
         }
 
-        private void ExpandButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            if (WindowState == WindowState.Normal)
-            {
-                WindowState = WindowState.Maximized;
-            }
-            else if (WindowState == WindowState.Maximized)
-            {
-                WindowState = WindowState.Normal;
-            }
-        }
 
-        private void CollapseButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            WindowState = WindowState.Minimized;
-        }
+       
+        
     }
 }

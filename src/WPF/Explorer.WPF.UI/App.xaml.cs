@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using ExplorER;
 
 namespace Explorer.WPF.UI
 {
@@ -8,6 +9,7 @@ namespace Explorer.WPF.UI
         {
             base.OnStartup(e);
 
+            ExplorerEr.CreateExplorerEr(new WPFSynchronizationHelper());
             var mainWindow = new MainWindow();
 
             mainWindow.Show();

@@ -1,0 +1,11 @@
+{
+  "Icons": {
+    ".doc": "doc_icon.svg",
+    ".docx": "doc_icon.svg",
+    ".mp4": "mp4_icon.svg",
+    ".pdf": "pdf_icon.svg",
+    ".txt": "txt.svg",
+    ".ZIP": "gif.svg",
+    ".xls": "xls.svg"
+  }
+}

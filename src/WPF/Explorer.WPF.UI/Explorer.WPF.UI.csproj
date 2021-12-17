@@ -12,14 +12,27 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.37" />
+    <PackageReference Include="SharpVectors.Reloaded" Version="1.7.6" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Core\Explorer.Shared.ViewModels\Explorer.Shared.ViewModels.csproj" />
+    <ProjectReference Include="..\..\Explorer.Application\ExplorER.csproj" />
+    <ProjectReference Include="..\Controls\EXWindow\EXWindow.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Resource Include="Assets\back.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="AttachedProperties\" />
+    <Folder Include="Behaviors\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Icons.Json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
