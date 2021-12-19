@@ -9,8 +9,6 @@ namespace ExplorER
 {
     public class DirectoryTabItemViewModel : BaseViewModel
     {
-        
-
         #region Private Fields
 
         private readonly IDirectoryHistory _history;
@@ -89,7 +87,6 @@ namespace ExplorER
 
         #endregion
 
-
         #region Commands Methods
 
         private void Open(object parametr)
@@ -122,10 +119,10 @@ namespace ExplorER
         {
             _history.MoveForward();
 
-            var Current = _history.Current;
+            var current = _history.Current;
 
-            FilePath = Current.DirectoryPath;
-            Name = Current.DirectoryPathName;
+            FilePath = current.DirectoryPath;
+            Name = current.DirectoryPathName;
 
             OpenDirectory();
         }
@@ -136,10 +133,10 @@ namespace ExplorER
         {
             _history.MoveBack();
 
-            var Current = _history.Current;
+            var current = _history.Current;
 
-            FilePath = Current.DirectoryPath;
-            Name = Current.DirectoryPathName;
+            FilePath = current.DirectoryPath;
+            Name = current.DirectoryPathName;
 
             OpenDirectory();
         }
@@ -164,10 +161,12 @@ namespace ExplorER
             {
                 foreach (var logicalDrive in Directory.GetLogicalDrives())
                     DirectoriesAndFiles.Add(new DirectoryViewModel(logicalDrive));
+
                 return;
             }
 
             var directoryInfo = new DirectoryInfo(FilePath);
+
             _backgroundWorker.RunWorkerAsync(directoryInfo);
         }
 
@@ -178,11 +177,9 @@ namespace ExplorER
                 RunWorker();
             }
         }
-
         private void BackgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
         }
-
         private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             var directoryInfo = e.Argument as DirectoryInfo;
@@ -198,6 +195,7 @@ namespace ExplorER
                     if (bw.CancellationPending)
                     {
                         e.Cancel = true;
+
                         return;
                     }
 
@@ -212,13 +210,12 @@ namespace ExplorER
                     if (bw.CancellationPending)
                     {
                         e.Cancel = true;
+
                         return;
                     }
 
-                    _synchronizationHelper.InvokeAsync(() =>
-                    {
-                        DirectoriesAndFiles.Add(new FileViewModel(fileInfo));
-                    }).Wait();
+                    _synchronizationHelper.InvokeAsync(() => { DirectoriesAndFiles.Add(new FileViewModel(fileInfo)); })
+                        .Wait();
 
                 }
             }
@@ -228,7 +225,6 @@ namespace ExplorER
             }
 
         }
-
         private void History_HistoryChanged(object sender, EventArgs e)
         {
             MoveBackCommand?.RaiseCanExecuteChanged();

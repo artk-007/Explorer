@@ -39,9 +39,9 @@
         private ExplorerEr(ISynchronizationHelper synchronizationHelper)
         {
             MainViewModel = new MainViewModel(synchronizationHelper);
-
-            IconsManager = new IconsManager(new ExtensionToImageFileConverter());
-            BookmarksManager = new BookmarksManager(MainViewModel);
+            var converter = new ExtensionToImageFileConverter();
+            IconsManager = new IconsManager(converter);
+            BookmarksManager = new BookmarksManager(MainViewModel, converter);
         }
 
         #endregion

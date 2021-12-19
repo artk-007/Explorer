@@ -1,6 +1,5 @@
-﻿using System.ComponentModel;
-using System.Windows;
-using ExplorER;
+﻿using ExplorER;
+using System.ComponentModel;
 
 namespace Explorer.WPF.UI
 {
@@ -11,7 +10,7 @@ namespace Explorer.WPF.UI
         public MainWindow()
         {
             InitializeComponent();
-            
+
             _mainVm = ExplorerEr.Instance.MainViewModel;
 
             DataContext = _mainVm;

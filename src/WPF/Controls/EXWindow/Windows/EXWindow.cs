@@ -2,27 +2,28 @@
 using System.Windows;
 using System.Windows.Input;
 
+
 namespace EXWindow
 {
-    public class EXWindow : Window
+    public class ExWindow : Window
     {
         #region Dependency Properties
 
         public static readonly DependencyProperty CloseCommandProperty = DependencyProperty.Register(
-            nameof(CloseCommand), typeof(ICommand), typeof(EXWindow), new PropertyMetadata(default(ICommand)));
+            nameof(CloseCommand), typeof(ICommand), typeof(ExWindow), new PropertyMetadata(default(ICommand)));
 
 
         public static readonly DependencyProperty CollapseCommandProperty = DependencyProperty.Register(
-            nameof(CollapseCommand), typeof(ICommand), typeof(EXWindow), new PropertyMetadata(default(ICommand)));
+            nameof(CollapseCommand), typeof(ICommand), typeof(ExWindow), new PropertyMetadata(default(ICommand)));
 
 
         public static readonly DependencyProperty ExpandCommandProperty = DependencyProperty.Register(
-            nameof(ExpandCommand), typeof(ICommand), typeof(EXWindow), new PropertyMetadata(default(ICommand)));
+            nameof(ExpandCommand), typeof(ICommand), typeof(ExWindow), new PropertyMetadata(default(ICommand)));
 
         public static readonly DependencyProperty ToolBarContentProperty = DependencyProperty.Register(
-            "ToolBarContent", typeof(FrameworkElement), typeof(EXWindow), new PropertyMetadata(default(FrameworkElement)));
+            "ToolBarContent", typeof(FrameworkElement), typeof(ExWindow), new PropertyMetadata(default(FrameworkElement)));
 
-        
+
 
         #endregion
 
@@ -56,18 +57,19 @@ namespace EXWindow
 
         #region Static Constructor
 
-        static EXWindow()
+        static ExWindow()
         {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(EXWindow),
-                new FrameworkPropertyMetadata(typeof(EXWindow)));
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(ExWindow),
+                new FrameworkPropertyMetadata(typeof(ExWindow)));
         }
 
         #endregion
 
         #region Constructor
 
-        public EXWindow()
+        public ExWindow()
         {
+            
             CloseCommand = new DelegateCommand(OnClose);
             CollapseCommand = new DelegateCommand(OnCollapse);
             ExpandCommand = new DelegateCommand(OnExpand);
@@ -76,11 +78,6 @@ namespace EXWindow
 
             var behavior = new WindowResizeFixerBehavior();
             behavior.Attach(this);
-
-            //var blurBehavior = new BlurBehavior();
-            //blurBehavior.Attach(this);
-
-            
 
         }
 

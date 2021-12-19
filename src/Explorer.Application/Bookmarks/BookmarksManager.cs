@@ -7,7 +7,7 @@ using System.Text.Json;
 
 namespace ExplorER
 {
-    public class BookmarksManager : IBookmarksManager
+    internal class BookmarksManager : IBookmarksManager
     {
         #region Constants
 
@@ -18,6 +18,7 @@ namespace ExplorER
         #region Private Fields
 
         private readonly MainViewModel _mainViewModel;
+        private readonly ExtensionToImageFileConverter _converter;
 
         private readonly ObservableCollection<MenuItemViewModel> _bookmarks =
                 new ObservableCollection<MenuItemViewModel>();
@@ -38,9 +39,10 @@ namespace ExplorER
 
         #region Constructor
 
-        public BookmarksManager(MainViewModel mainViewModel)
+        public BookmarksManager(MainViewModel mainViewModel, ExtensionToImageFileConverter converter)
         {
             _mainViewModel = mainViewModel;
+            _converter = converter;
             BookmarkClickCommand = new DelegateCommand(OnBookmarkClicked);
 
             var items = OpenBookmarksFile();
@@ -87,7 +89,7 @@ namespace ExplorER
                 if (path == null)
                 {
                     vm.Header = bookmarkItem.BookmarkFolderName;
-                    //vm.IconPath = Path.Combine(iconsDirectory.FullName, IconName.BookmarkFolder + ".svg");
+                    vm.IconPath = Path.Combine(iconsDirectory.FullName, IconName.BookmarkFolder + ".svg");
                 }
                 else
                 {
@@ -97,12 +99,14 @@ namespace ExplorER
                     if (atrr.HasFlag(FileAttributes.Directory))
                     {
                         vm.Header = new DirectoryInfo(path).Name;
-                        //vm.IconPath = Path.Combine(iconsDirectory.FullName, IconName.Folder + ".svg");
+                        vm.IconPath = Path.Combine(iconsDirectory.FullName, IconName.Folder + ".svg");
                     }
                     else
                     {
+                        var extension = new FileInfo(path).Extension;
+
                         vm.Header = new FileInfo(path).Name;
-                       // vm.IconPath = Path.Combine(iconsDirectory.FullName, IconName.BookmarkFolder + ".svg");
+                        vm.IconPath = _converter.GetImagePath(string.IsNullOrEmpty(extension) ? "" : extension.Substring(1)).FullName;
                     }
                         
                 }

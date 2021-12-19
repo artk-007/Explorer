@@ -29,10 +29,4 @@
     <Folder Include="Behaviors\" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="Icons.Json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>

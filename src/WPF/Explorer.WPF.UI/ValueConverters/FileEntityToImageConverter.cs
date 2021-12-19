@@ -1,12 +1,11 @@
-﻿using SharpVectors.Converters;
+﻿using ExplorER;
+using SharpVectors.Converters;
 using SharpVectors.Renderers.Wpf;
 using System;
 using System.Globalization;
 using System.Windows.Data;
-using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using ExplorER;
 
 namespace Explorer.WPF.UI
 {
@@ -51,4 +50,5 @@ namespace Explorer.WPF.UI
             throw new NotImplementedException();
         }
     }
+
 }

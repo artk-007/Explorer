@@ -9,6 +9,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="bookmarks.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Icons\Resources\Icons\bin.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -1,0 +1,19 @@
+﻿[
+  {
+    "Path": "C:"
+  },
+  {
+    "BookmarkFolderName": "D",
+    "Children": [
+      {
+        "Path": "D:/Stud/AOC"
+      },
+      {
+        "Path": "D:/Stud/Techpr"
+      },
+      {
+        "Path": "D:/Stud/Inet"
+      }
+    ] 
+  }
+]

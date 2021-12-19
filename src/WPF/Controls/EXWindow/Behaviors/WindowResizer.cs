@@ -86,37 +86,37 @@ internal class WindowResizer
     /// <summary>
     /// The window to handle the resizing for
     /// </summary>
-    private Window mWindow;
+    private Window _mWindow;
 
     /// <summary>
     /// The last calculated available screen size
     /// </summary>
-    private Rect mScreenSize = new Rect();
+    private Rect _mScreenSize = new Rect();
 
     /// <summary>
     /// How close to the edge the window has to be to be detected as at the edge of the screen
     /// </summary>
-    private int mEdgeTolerance = 1;
+    private int _mEdgeTolerance = 1;
 
     /// <summary>
     /// The transform matrix used to convert WPF sizes to screen pixels
     /// </summary>
-    private DpiScale? mMonitorDpi;
+    private DpiScale? _mMonitorDpi;
 
     /// <summary>
     /// The last screen the window was on
     /// </summary>
-    private IntPtr mLastScreen;
+    private IntPtr _mLastScreen;
 
     /// <summary>
     /// The last known dock position
     /// </summary>
-    private WindowDockPosition mLastDock = WindowDockPosition.Undocked;
+    private WindowDockPosition _mLastDock = WindowDockPosition.Undocked;
 
     /// <summary>
     /// A flag indicating if the window is currently being moved/dragged
     /// </summary>
-    private bool mBeingMoved = false;
+    private bool _mBeingMoved = false;
 
     #endregion
 
@@ -124,13 +124,13 @@ internal class WindowResizer
 
     [DllImport("user32.dll")]
     [return: MarshalAs(UnmanagedType.Bool)]
-    private static extern bool GetCursorPos(out POINT lpPoint);
+    private static extern bool GetCursorPos(out Point lpPoint);
 
     [DllImport("user32.dll")]
-    private static extern bool GetMonitorInfo(IntPtr hMonitor, MONITORINFO lpmi);
+    private static extern bool GetMonitorInfo(IntPtr hMonitor, Monitorinfo lpmi);
 
     [DllImport("user32.dll", SetLastError = true)]
-    private static extern IntPtr MonitorFromPoint(POINT pt, MonitorOptions dwFlags);
+    private static extern IntPtr MonitorFromPoint(Point pt, MonitorOptions dwFlags);
 
     [DllImport("user32.dll")]
     private static extern IntPtr MonitorFromWindow(IntPtr hwnd, MonitorOptions dwFlags);
@@ -174,7 +174,7 @@ internal class WindowResizer
     /// For example a second monitor on the right will have a Left position of
     /// the X resolution of the screens on the left
     /// </summary>
-    public Rect CurrentScreenSize => mScreenSize;
+    public Rect CurrentScreenSize => _mScreenSize;
 
     #endregion
 
@@ -187,14 +187,14 @@ internal class WindowResizer
     /// <param name="adjustSize">The callback for the host to adjust the maximum available size if needed</param>
     public WindowResizer(Window window)
     {
-        mWindow = window;
+        _mWindow = window;
 
         // Listen out for source initialized to setup
-        mWindow.SourceInitialized += Window_SourceInitialized;
+        _mWindow.SourceInitialized += Window_SourceInitialized;
 
         // Monitor for edge docking
-        mWindow.SizeChanged += Window_SizeChanged;
-        mWindow.LocationChanged += Window_LocationChanged;
+        _mWindow.SizeChanged += Window_SizeChanged;
+        _mWindow.LocationChanged += Window_LocationChanged;
     }
 
     #endregion
@@ -209,7 +209,7 @@ internal class WindowResizer
     private void Window_SourceInitialized(object sender, System.EventArgs e)
     {
         // Get the handle of this window
-        var handle = (new WindowInteropHelper(mWindow)).Handle;
+        var handle = (new WindowInteropHelper(_mWindow)).Handle;
         var handleSource = HwndSource.FromHwnd(handle);
 
         // If not found, end
@@ -245,32 +245,32 @@ internal class WindowResizer
         WmGetMinMaxInfo(IntPtr.Zero, IntPtr.Zero);
 
         // Get the monitor transform for the current position
-        mMonitorDpi = VisualTreeHelper.GetDpi(mWindow);
+        _mMonitorDpi = VisualTreeHelper.GetDpi(_mWindow);
 
         // Cannot calculate size until we know monitor scale
-        if (mMonitorDpi == null)
+        if (_mMonitorDpi == null)
             return;
 
         // Get window rectangle
-        var top = mWindow.Top;
-        var left = mWindow.Left;
-        var bottom = top + mWindow.Height;
-        var right = left + mWindow.Width;
+        var top = _mWindow.Top;
+        var left = _mWindow.Left;
+        var bottom = top + _mWindow.Height;
+        var right = left + _mWindow.Width;
 
         // Get window position/size in device pixels
-        var windowTopLeft = new Point(left * mMonitorDpi.Value.DpiScaleX, top * mMonitorDpi.Value.DpiScaleX);
+        var windowTopLeft = new System.Windows.Point(left * _mMonitorDpi.Value.DpiScaleX, top * _mMonitorDpi.Value.DpiScaleX);
         var windowBottomRight =
-            new Point(right * mMonitorDpi.Value.DpiScaleX, bottom * mMonitorDpi.Value.DpiScaleX);
+            new System.Windows.Point(right * _mMonitorDpi.Value.DpiScaleX, bottom * _mMonitorDpi.Value.DpiScaleX);
 
         // Check for edges docked
-        var edgedTop = windowTopLeft.Y <= (mScreenSize.Top + mEdgeTolerance) &&
-                       windowTopLeft.Y >= (mScreenSize.Top - mEdgeTolerance);
-        var edgedLeft = windowTopLeft.X <= (mScreenSize.Left + mEdgeTolerance) &&
-                        windowTopLeft.X >= (mScreenSize.Left - mEdgeTolerance);
-        var edgedBottom = windowBottomRight.Y >= (mScreenSize.Bottom - mEdgeTolerance) &&
-                          windowBottomRight.Y <= (mScreenSize.Bottom + mEdgeTolerance);
-        var edgedRight = windowBottomRight.X >= (mScreenSize.Right - mEdgeTolerance) &&
-                         windowBottomRight.X <= (mScreenSize.Right + mEdgeTolerance);
+        var edgedTop = windowTopLeft.Y <= (_mScreenSize.Top + _mEdgeTolerance) &&
+                       windowTopLeft.Y >= (_mScreenSize.Top - _mEdgeTolerance);
+        var edgedLeft = windowTopLeft.X <= (_mScreenSize.Left + _mEdgeTolerance) &&
+                        windowTopLeft.X >= (_mScreenSize.Left - _mEdgeTolerance);
+        var edgedBottom = windowBottomRight.Y >= (_mScreenSize.Bottom - _mEdgeTolerance) &&
+                          windowBottomRight.Y <= (_mScreenSize.Bottom + _mEdgeTolerance);
+        var edgedRight = windowBottomRight.X >= (_mScreenSize.Right - _mEdgeTolerance) &&
+                         windowBottomRight.X <= (_mScreenSize.Right + _mEdgeTolerance);
 
         // Get docked position
         var dock = WindowDockPosition.Undocked;
@@ -302,12 +302,12 @@ internal class WindowResizer
             dock = WindowDockPosition.Undocked;
 
         // If dock has changed
-        if (dock != mLastDock)
+        if (dock != _mLastDock)
             // Inform listeners
             WindowDockChanged(dock);
 
         // Save last dock position
-        mLastDock = dock;
+        _mLastDock = dock;
     }
 
     #endregion
@@ -335,13 +335,13 @@ internal class WindowResizer
 
             // Once the window starts being moved
             case 0x0231: // WM_ENTERSIZEMOVE
-                mBeingMoved = true;
+                _mBeingMoved = true;
                 WindowStartedMove();
                 break;
 
             // Once the window has finished being moved
             case 0x0232: // WM_EXITSIZEMOVE
-                mBeingMoved = false;
+                _mBeingMoved = false;
                 WindowFinishedMove();
                 break;
         }
@@ -363,7 +363,7 @@ internal class WindowResizer
         GetCursorPos(out var lMousePosition);
 
         // Now get the current screen
-        var lCurrentScreen = mBeingMoved
+        var lCurrentScreen = _mBeingMoved
             ?
             // If being dragged get it from the mouse position
             MonitorFromPoint(lMousePosition, MonitorOptions.MonitorDefaulttonull)
@@ -372,25 +372,25 @@ internal class WindowResizer
             // in case the mouse is on another monitor
             MonitorFromWindow(hwnd, MonitorOptions.MonitorDefaulttonull);
 
-        var lPrimaryScreen = MonitorFromPoint(new POINT(0, 0), MonitorOptions.MonitorDefaulttoprimary);
+        var lPrimaryScreen = MonitorFromPoint(new Point(0, 0), MonitorOptions.MonitorDefaulttoprimary);
 
         // Try and get the current screen information
-        var lCurrentScreenInfo = new MONITORINFO();
+        var lCurrentScreenInfo = new Monitorinfo();
         if (GetMonitorInfo(lCurrentScreen, lCurrentScreenInfo) == false)
             return;
 
         // Try and get the primary screen information
-        var lPrimaryScreenInfo = new MONITORINFO();
+        var lPrimaryScreenInfo = new Monitorinfo();
         if (GetMonitorInfo(lPrimaryScreen, lPrimaryScreenInfo) == false)
             return;
 
         // NOTE: Always update it
         // If this has changed from the last one, update the transform
         //if (lCurrentScreen != mLastScreen || mMonitorDpi == null)
-        mMonitorDpi = VisualTreeHelper.GetDpi(mWindow);
+        _mMonitorDpi = VisualTreeHelper.GetDpi(_mWindow);
 
         // Store last know screen
-        mLastScreen = lCurrentScreen;
+        _mLastScreen = lCurrentScreen;
 
         // Get work area sizes and rations
         var currentX = lCurrentScreenInfo.RCWork.Left - lCurrentScreenInfo.RCMonitor.Left;
@@ -408,7 +408,7 @@ internal class WindowResizer
         if (lParam != IntPtr.Zero)
         {
             // Get min/max structure to fill with information
-            var lMmi = (MINMAXINFO) Marshal.PtrToStructure(lParam, typeof(MINMAXINFO));
+            var lMmi = (Minmaxinfo) Marshal.PtrToStructure(lParam, typeof(Minmaxinfo));
 
             //
             //   NOTE: The below setting of max sizes we no longer do
@@ -442,8 +442,8 @@ internal class WindowResizer
             lMmi.PointMaxSize.Y = lPrimaryScreenInfo.RCMonitor.Bottom;
 
             // Set min size
-            var minSize = new Point(mWindow.MinWidth * mMonitorDpi.Value.DpiScaleX,
-                mWindow.MinHeight * mMonitorDpi.Value.DpiScaleX);
+            var minSize = new System.Windows.Point(_mWindow.MinWidth * _mMonitorDpi.Value.DpiScaleX,
+                _mWindow.MinHeight * _mMonitorDpi.Value.DpiScaleX);
             lMmi.PointMinTrackSize.X = (int) minSize.X;
             lMmi.PointMinTrackSize.Y = (int) minSize.Y;
 
@@ -456,14 +456,14 @@ internal class WindowResizer
 
         // Get margin around window
         CurrentMonitorMargin = new Thickness(
-            (lCurrentScreenInfo.RCWork.Left - lCurrentScreenInfo.RCMonitor.Left) / mMonitorDpi.Value.DpiScaleX,
-            (lCurrentScreenInfo.RCWork.Top - lCurrentScreenInfo.RCMonitor.Top) / mMonitorDpi.Value.DpiScaleY,
-            (lCurrentScreenInfo.RCMonitor.Right - lCurrentScreenInfo.RCWork.Right) / mMonitorDpi.Value.DpiScaleX,
-            (lCurrentScreenInfo.RCMonitor.Bottom - lCurrentScreenInfo.RCWork.Bottom) / mMonitorDpi.Value.DpiScaleY
+            (lCurrentScreenInfo.RCWork.Left - lCurrentScreenInfo.RCMonitor.Left) / _mMonitorDpi.Value.DpiScaleX,
+            (lCurrentScreenInfo.RCWork.Top - lCurrentScreenInfo.RCMonitor.Top) / _mMonitorDpi.Value.DpiScaleY,
+            (lCurrentScreenInfo.RCMonitor.Right - lCurrentScreenInfo.RCWork.Right) / _mMonitorDpi.Value.DpiScaleX,
+            (lCurrentScreenInfo.RCMonitor.Bottom - lCurrentScreenInfo.RCWork.Bottom) / _mMonitorDpi.Value.DpiScaleY
         );
 
         // Store new size
-        mScreenSize = new Rect(lCurrentScreenInfo.RCWork.Left, lCurrentScreenInfo.RCWork.Top, currentWidth,
+        _mScreenSize = new Rect(lCurrentScreenInfo.RCWork.Left, lCurrentScreenInfo.RCWork.Top, currentWidth,
             currentHeight);
     }
 
@@ -471,14 +471,14 @@ internal class WindowResizer
     /// Gets the current cursor position in screen coordinates relative to an entire multi-desktop position
     /// </summary>
     /// <returns></returns>
-    public Point GetCursorPosition()
+    public System.Windows.Point GetCursorPosition()
     {
         // Get mouse position
         GetCursorPos(out var lMousePosition);
 
         // Apply DPI scaling
-        return new Point(lMousePosition.X / mMonitorDpi.Value.DpiScaleX,
-            lMousePosition.Y / mMonitorDpi.Value.DpiScaleY);
+        return new System.Windows.Point(lMousePosition.X / _mMonitorDpi.Value.DpiScaleX,
+            lMousePosition.Y / _mMonitorDpi.Value.DpiScaleY);
     }
 }
 
@@ -493,10 +493,10 @@ public enum MonitorOptions : uint
 
 
 [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
-public class MONITORINFO
+public class Monitorinfo
 {
 #pragma warning disable IDE1006 // Naming Styles
-    public int CBSize = Marshal.SizeOf(typeof(MONITORINFO));
+    public int CBSize = Marshal.SizeOf(typeof(Monitorinfo));
     public Rectangle RCMonitor = new Rectangle();
     public Rectangle RCWork = new Rectangle();
     public int DWFlags = 0;
@@ -521,19 +521,19 @@ public struct Rectangle
 }
 
 [StructLayout(LayoutKind.Sequential)]
-public struct MINMAXINFO
+public struct Minmaxinfo
 {
 #pragma warning disable IDE1006 // Naming Styles
-    public POINT PointReserved;
-    public POINT PointMaxSize;
-    public POINT PointMaxPosition;
-    public POINT PointMinTrackSize;
-    public POINT PointMaxTrackSize;
+    public Point PointReserved;
+    public Point PointMaxSize;
+    public Point PointMaxPosition;
+    public Point PointMinTrackSize;
+    public Point PointMaxTrackSize;
 #pragma warning restore IDE1006 // Naming Styles
 };
 
 [StructLayout(LayoutKind.Sequential)]
-public struct POINT
+public struct Point
 {
     /// <summary>
     /// x coordinate of point.
@@ -552,7 +552,7 @@ public struct POINT
     /// <summary>
     /// Construct a point of coordinates (x,y).
     /// </summary>
-    public POINT(int x, int y)
+    public Point(int x, int y)
     {
         X = x;
         Y = y;

@@ -6,8 +6,9 @@ using ExplorER;
 
 namespace Explorer.WPF.UI
 {
-    internal class WPFSynchronizationHelper : ISynchronizationHelper
+    internal class WpfSynchronizationHelper : ISynchronizationHelper
     {
-        public async Task InvokeAsync(Action action) => await Application.Current.Dispatcher.InvokeAsync(action, DispatcherPriority.Background);
+        public async Task InvokeAsync(Action action) => 
+            await Application.Current.Dispatcher.InvokeAsync(action, DispatcherPriority.Background);
     }
 }

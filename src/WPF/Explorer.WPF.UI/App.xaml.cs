@@ -9,7 +9,8 @@ namespace Explorer.WPF.UI
         {
             base.OnStartup(e);
 
-            ExplorerEr.CreateExplorerEr(new WPFSynchronizationHelper());
+            ExplorerEr.CreateExplorerEr(new WpfSynchronizationHelper());
+
             var mainWindow = new MainWindow();
 
             mainWindow.Show();
