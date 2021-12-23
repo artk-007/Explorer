@@ -94,7 +94,7 @@ namespace ExplorER
         #endregion
 
 
-
+        public DelegateCommand AddBookmarkCommand => ExplorerEr.Instance.BookmarksManager.AddBookmarkCommand;
 
     }
     /// <summary>

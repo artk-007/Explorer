@@ -7,7 +7,7 @@ using System.Text.Json;
 
 namespace ExplorER
 {
-    internal class BookmarksManager : IBookmarksManager
+    internal class BookmarksManager :BaseViewModel, IBookmarksManager
     {
         #region Constants
 
@@ -20,8 +20,11 @@ namespace ExplorER
         private readonly MainViewModel _mainViewModel;
         private readonly ExtensionToImageFileConverter _converter;
 
-        private readonly ObservableCollection<MenuItemViewModel> _bookmarks =
+        private ObservableCollection<MenuItemViewModel> _bookmarks =
                 new ObservableCollection<MenuItemViewModel>();
+
+        private readonly List<BookmarkItem> _items;
+        public DelegateCommand AddBookmarkCommand { get; }
 
         #endregion
 
@@ -44,29 +47,13 @@ namespace ExplorER
             _mainViewModel = mainViewModel;
             _converter = converter;
             BookmarkClickCommand = new DelegateCommand(OnBookmarkClicked);
-
-            var items = OpenBookmarksFile();
-            _bookmarks = CreateMenuItemViewModels(items);
-                
-                new ObservableCollection<MenuItemViewModel>
-            {
-                new MenuItemViewModel("C:\\")
-                {
-                    Header = "C:\\",
-                    Command = BookmarkClickCommand
-                },
-                new MenuItemViewModel(@"D:\Stud\Techpr\explorer\Explorer\src")
-                {
-                    Header = @"Курсач",
-                    Command = BookmarkClickCommand
-                },
-                new MenuItemViewModel(@"C:\Windows\System32")
-                {
-                    Header = @"Продемонстрировать асинхронную",
-                    Command = BookmarkClickCommand
-                }
-            };
+            AddBookmarkCommand = new DelegateCommand(ONAddBookmark);
+            _items = OpenBookmarksFile();
+            _bookmarks = CreateMenuItemViewModels(_items);
+            
         }
+
+       
 
         private ObservableCollection<MenuItemViewModel> CreateMenuItemViewModels(IList<BookmarkItem> items)
         {
@@ -74,40 +61,37 @@ namespace ExplorER
             if (items == null || !items.Any())
                 return menuVms;
 
+            var applicationDirectory = AppDomain.CurrentDomain.BaseDirectory;
+
+            var iconsDirectory = new DirectoryInfo(Path.Combine(applicationDirectory, "Resources", "Icons"));
+
             foreach (var bookmarkItem in items)
             {
                 var path = bookmarkItem.Path;
-
+                
                 var vm = new MenuItemViewModel(path)
                 {
                     Items = CreateMenuItemViewModels(bookmarkItem.Children)
                 };
                 
-                var applicationDirectory = AppDomain.CurrentDomain.BaseDirectory;
-
-                var iconsDirectory = new DirectoryInfo(Path.Combine(applicationDirectory, "Resources", "Icons"));
+               
                 if (path == null)
                 {
                     vm.Header = bookmarkItem.BookmarkFolderName;
                     vm.IconPath = Path.Combine(iconsDirectory.FullName, IconName.BookmarkFolder + ".svg");
                 }
-                else
+                else 
                 {
-                    vm.Command = BookmarkClickCommand;
-                    var atrr = File.GetAttributes(path);
-
-                    if (atrr.HasFlag(FileAttributes.Directory))
+                    
+                    try
                     {
-                        vm.Header = new DirectoryInfo(path).Name;
-                        vm.IconPath = Path.Combine(iconsDirectory.FullName, IconName.Folder + ".svg");
+                        DefenitionPathToVm(vm, path, iconsDirectory);
                     }
-                    else
+                    catch (Exception e)
                     {
-                        var extension = new FileInfo(path).Extension;
-
-                        vm.Header = new FileInfo(path).Name;
-                        vm.IconPath = _converter.GetImagePath(string.IsNullOrEmpty(extension) ? "" : extension.Substring(1)).FullName;
+                        continue;
                     }
+                    
                         
                 }
                 
@@ -116,6 +100,26 @@ namespace ExplorER
             }
 
             return menuVms;
+        }
+
+        private void DefenitionPathToVm(MenuItemViewModel vm, string path, DirectoryInfo iconsDirectory)
+        {
+            vm.Command = BookmarkClickCommand;
+
+            var atrr = File.GetAttributes(path);
+
+            if (atrr.HasFlag(FileAttributes.Directory))
+            {
+                vm.Header = new DirectoryInfo(path).Name;
+                vm.IconPath = Path.Combine(iconsDirectory.FullName, IconName.Folder + ".svg");
+            }
+            else
+            {
+                var extension = new FileInfo(path).Extension;
+
+                vm.Header = new FileInfo(path).Name;
+                vm.IconPath = _converter.GetImagePath(string.IsNullOrEmpty(extension) ? "" : extension.Substring(1)).FullName;
+            }
         }
 
         private List<BookmarkItem> OpenBookmarksFile()
@@ -148,6 +152,40 @@ namespace ExplorER
             }
         }
 
+        private void ONAddBookmark(object obj)
+        {
+            if (obj is string path && Directory.Exists(path))
+            {
+                //var applicationDirectory = AppDomain.CurrentDomain.BaseDirectory;
+
+                //var iconsDirectory = new DirectoryInfo(Path.Combine(applicationDirectory, "Resources", "Icons"));
+
+                //var vm = new MenuItemViewModel(path);
+
+                //DefenitionPathToVm(vm,path, iconsDirectory);
+
+                //_bookmarks.Add(vm);
+                _items.Add(new BookmarkItem()
+                {
+                    Path = path
+                });
+
+                try
+                {
+                    var json = JsonSerializer.Serialize(_items);
+                    File.WriteAllText(BookmarksFileName, json);
+                }
+                catch (Exception e)
+                {
+                }
+                _bookmarks.Clear();
+                foreach (var viewModel in CreateMenuItemViewModels(_items))
+                {
+                    _bookmarks.Add(viewModel);
+                }
+               
+            }
+        }
         #endregion
 
     }

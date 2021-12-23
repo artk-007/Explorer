@@ -9,5 +9,6 @@ namespace ExplorER
     {
 
        IReadOnlyCollection<MenuItemViewModel> Bookmarks { get; }
+       DelegateCommand AddBookmarkCommand { get; }
     }
 }

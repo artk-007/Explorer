@@ -7,7 +7,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Themes/Menu.xaml"></ResourceDictionary>
-                <ResourceDictionary>
+                <!--<ResourceDictionary>
                     <DrawingImage x:Key="FolderIconImage">
                         <DrawingImage.Drawing>
                             <DrawingGroup ClipGeometry="M0,0 V48 H48 V0 H0 Z">
@@ -27,7 +27,7 @@
                             </DrawingGroup>
                         </DrawingImage.Drawing>
                     </DrawingImage>
-                </ResourceDictionary>
+                </ResourceDictionary>-->
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
 

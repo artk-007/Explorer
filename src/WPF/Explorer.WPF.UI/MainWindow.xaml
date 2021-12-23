@@ -229,66 +229,81 @@
                 </Button.Style>
             </Button>
 
-            <TextBox Grid.Column="3"
-                                             VerticalAlignment="Center"
-                                             Margin="10 0"
-                                             Text="{Binding CurrentDirectoryTabItem.FilePath}">
+                <ui:SearchControl Grid.Column="3"
+                                  VerticalAlignment="Center"
+                                  Margin="10 0"
+                                  Text="{Binding CurrentDirectoryTabItem.FilePath}">
+                    <ui:SearchControl.ButtonsContent>
+                        <StackPanel Orientation="Horizontal">
+                            <Button Command="{Binding AddBookmarkCommand}"
+                                    CommandParameter="{Binding CurrentDirectoryTabItem.FilePath}">
+                                <Button.Style>
+                                    <Style TargetType="{x:Type Button}">
+                                        <Setter Property="Background" Value="#00000000" />
+                                        <Setter Property="BorderBrush" Value="#00000000" />
+                                        <Setter Property="Foreground" Value="AliceBlue" />
+                                        <Setter Property="BorderThickness" Value="0" />
+                                        <Setter Property="HorizontalContentAlignment" Value="Center" />
+                                        <Setter Property="VerticalContentAlignment" Value="Center" />
+                                        <Setter Property="ToolTip" Value="Добавить" />
+                                        <Setter Property="Margin" Value="2 2 4 2" />
 
-                <TextBox.Style>
-                    <Style TargetType="{x:Type TextBox}">
-                        <Setter Property="Background" Value="#202124"/>
-                        <Setter Property="BorderBrush" Value="#404D64"/>
-                        <Setter Property="FontSize" Value="12"/>
-                        <Setter Property="Foreground" Value="AliceBlue"/>
-                        <Setter Property="BorderThickness" Value="0"/>
-                        <Setter Property="KeyboardNavigation.TabNavigation" Value="None"/>
-                        <Setter Property="HorizontalContentAlignment" Value="Left"/>
-                        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
-                        <Setter Property="AllowDrop" Value="true"/>
-                        <Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst"/>
-                        <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="{x:Type TextBox}">
-                                    <Border x:Name="border"
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="{x:Type Button}">
+                                                    <Border x:Name="border"
                                                                     Height="28"
-                                                                    CornerRadius="14"
+                                                                    Width="28"
                                                                     Background="{TemplateBinding Background}"
                                                                     BorderThickness="{TemplateBinding BorderThickness}"
+                                                                    CornerRadius="14"
                                                                     BorderBrush="{TemplateBinding BorderBrush}"
-                                                                    SnapsToDevicePixels="True">
-                                        <Grid Margin="20 0"
-                                                                      VerticalAlignment="Center">
-                                            <ScrollViewer x:Name="PART_ContentHost"
-                                                                        Focusable="false"
-                                                                        HorizontalScrollBarVisibility="Hidden"
-                                                                        VerticalScrollBarVisibility="Hidden" />
-                                        </Grid>
-
-                                    </Border>
-                                    <ControlTemplate.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="true">
-                                            <Setter Property="Background" Value="#292A2D"></Setter>
-                                        </Trigger>
-                                        <Trigger Property="IsKeyboardFocused" Value="true">
-                                            <Setter Property="BorderThickness" Value="1"></Setter>
-                                        </Trigger>
-                                    </ControlTemplate.Triggers>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                        <Style.Triggers>
-                            <MultiTrigger>
-                                <MultiTrigger.Conditions>
-                                    <Condition Property="IsInactiveSelectionHighlightEnabled" Value="true"/>
-                                    <Condition Property="IsSelectionActive" Value="false"/>
-                                </MultiTrigger.Conditions>
-                                <Setter Property="SelectionBrush" Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightBrushKey}}"/>
-                            </MultiTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </TextBox.Style>
-            </TextBox>
+                                                                    SnapsToDevicePixels="true">
+                                                        <Viewbox
+                                                                    Width="20"
+                                                                    Height="20"
+                                                                    Stretch="Uniform">
+                                                            <Canvas Width="24" Height="24">
+                                                                <Path Fill="AliceBlue" Data="M19 5.5C19 7.98528 16.9853 10 14.5 10C12.0147 10 10 7.98528 10 5.5C10 3.01472 12.0147 1 14.5 1C16.9853 1 19 3.01472 19 5.5ZM15 3.5C15 3.22386 14.7761 3 14.5 3C14.2239 3 14 3.22386 14 3.5V5H12.5C12.2239 5 12 5.22386 12 5.5C12 5.77614 12.2239 6 12.5 6H14V7.5C14 7.77614 14.2239 8 14.5 8C14.7761 8 15 7.77614 15 7.5V6H16.5C16.7761 6 17 5.77614 17 5.5C17 5.22386 16.7761 5 16.5 5H15V3.5ZM14.5 11C15.02 11 15.5232 10.9278 16 10.793V17.5C16 17.6881 15.8945 17.8602 15.7269 17.9456C15.5593 18.0309 15.358 18.015 15.2059 17.9044L10 14.1183L4.79409 17.9044C4.64199 18.015 4.4407 18.0309 4.27311 17.9456C4.10553 17.8602 4 17.6881 4 17.5V4.5C4 3.11929 5.11929 2 6.5 2H10.2572C9.47182 2.95094 9 4.17037 9 5.5C9 8.53757 11.4624 11 14.5 11Z" />
+                                                            </Canvas>
+                                                        </Viewbox>
+                                                    </Border>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsDefaulted" Value="true" />
+                                                        <Trigger Property="IsMouseOver" Value="true">
+                                                            <Setter Property="Background" Value="#CC454545" />
+                                                        </Trigger>
+                                                        <DataTrigger Binding="{Binding IsActive,RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
+                                                                         Value="False">
+                                                            <Setter Property="Foreground" Value="#666666" />
+                                                        </DataTrigger>
+                                                        <MultiDataTrigger>
+                                                            <MultiDataTrigger.Conditions>
+                                                                <Condition Binding="{Binding IsActive,RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
+                                                                            Value="False" />
+                                                                <Condition Binding="{ Binding IsMouseOver, RelativeSource={RelativeSource Self}}"
+                                                                            Value="True" />
+                                                            </MultiDataTrigger.Conditions>
+                                                            <MultiDataTrigger.Setters>
+                                                                <Setter Property="Foreground"
+                                                                            Value="#b8b8b8" />
+                                                            </MultiDataTrigger.Setters>
+                                                        </MultiDataTrigger>
+                                                        <Trigger Property="IsPressed" Value="true">
+                                                            <Setter Property="Background" Value="#333333" />
+                                                        </Trigger>
+                                                        <Trigger Property="IsEnabled" Value="false" />
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+                            
+                        </StackPanel>
+                    </ui:SearchControl.ButtonsContent>
+                </ui:SearchControl>
         </Grid>
 
         <!--Закладыки-->
