@@ -1,39 +1,85 @@
 ﻿using System;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Threading.Tasks;
+using ExplorER.Base;
+using ExplorER.FileEntities;
+using ExplorER.FileEntities.Base;
+using ExplorER.FilePresenters;
+using ExplorER.FilePresenters.Base.Core;
 
 namespace ExplorER
 {
-    public class DirectoryTabItemViewModel : BaseViewModel
+    public class DirectoryTabItemViewModel : ChromerTabItemViewModel
     {
         #region Private Fields
 
         private readonly IDirectoryHistory _history;
-        private readonly BackgroundWorker _backgroundWorker;
-        private readonly ISynchronizationHelper _synchronizationHelper;
+
+
+        private string _searchText;
+        private bool _isTilePresenter;
+        private bool _isGridPresenter;
 
         #endregion
 
         #region Public Properties
 
-        public string FilePath { get; set; }
+        public ISynchronizationHelper SynchronizationHelper { get; }
 
-        public string Name { get; set; }
+        public bool IsTilePresenter
+        {
+            get => _isTilePresenter;
+            set
+            {
+                _isTilePresenter = value;
 
-        public ObservableCollection<FileEntityViewModel> DirectoriesAndFiles { get; set; } =
-            new ObservableCollection<FileEntityViewModel>();
+                if (value)
+                {
+                    IsGridPresenter = false;
+                    OpenDirectory();
+                }
+                else if (!_isGridPresenter)
+                {
+                    IsTilePresenter = true;
+                }
+            }
+        }
 
-        public FileEntityViewModel SelectedFileEntity { get; set; }
-     
+        public bool IsGridPresenter
+        {
+            get => _isGridPresenter;
+            set
+            {
+                _isGridPresenter = value;
+
+                if (value)
+                {
+                    IsTilePresenter = false;
+                    OpenDirectory();
+                }
+                else if (!_isTilePresenter)
+                {
+                    IsGridPresenter = true;
+                }
+            }
+        }
+
+        public string SearchText
+        {
+            get => _searchText;
+            set => SetSearchText(value);
+        }
+        
+        public string CurrentDirectoryFileName => _history.Current.DirectoryPath;
+
+        public IFilesPresenter? FilesPresenter { get; set; }
+
         #endregion
-        
-        #region Comands
 
-        public DelegateCommand OpenCommand { get; }
-        
+        #region Commands
+
+        public DelegateCommand AddBookmarkCommand => ExplorerEr.Instance.BookmarksManager.AddBookmarkCommand;
+
         public DelegateCommand MoveBackCommand { get; }
 
         public DelegateCommand MoveForwardCommand { get; }
@@ -42,65 +88,55 @@ namespace ExplorER
 
         #region Constructor
 
-        public DirectoryTabItemViewModel(ISynchronizationHelper synchronizationHelper)
+        public DirectoryTabItemViewModel(ISynchronizationHelper synchronizationHelper,
+            string directoryPath,
+            string directoryName)
         {
-            _synchronizationHelper = synchronizationHelper;
+            SynchronizationHelper = synchronizationHelper;
 
-            _backgroundWorker = new BackgroundWorker()
-            {
-                WorkerSupportsCancellation = true,
-                WorkerReportsProgress = true
-            };
+            _history = new DirectoryHistory(directoryPath, directoryName);
 
-            _backgroundWorker.RunWorkerCompleted += BackgroundWorker_RunWorkerCompleted;
-            _backgroundWorker.DoWork += BackgroundWorker_DoWork;
-            _backgroundWorker.ProgressChanged += BackgroundWorker_ProgressChanged;
-
-            _history = new DirectoryHistory("Мой компьютер", "Мой компьютер");
-
-            OpenCommand = new DelegateCommand(Open);
             MoveBackCommand = new DelegateCommand(OnMoveBack, OnCanMoveBack);
             MoveForwardCommand = new DelegateCommand(OnMoveForward, OnCanMoveForward);
 
-            Name = _history.Current.DirectoryPathName;
-            FilePath = _history.Current.DirectoryPath;
-            
-                OpenDirectory();
-            
+            Header = _history.Current.DirectoryPathName;
+            _searchText = _history.Current.DirectoryPath;
+
+            IsTilePresenter = true;
+
             _history.HistoryChanged += History_HistoryChanged;
         }
-
-
 
         #endregion
 
         #region Public Methods
+
         public void OpenBookmark(string path)
         {
-            var atrr = File.GetAttributes(path);
+            var attr = File.GetAttributes(path);
 
-            if (atrr.HasFlag(FileAttributes.Directory))
-                Open(new DirectoryViewModel(path));
+            if (attr.HasFlag(FileAttributes.Directory))
+                Open(new DirectoryViewModel(new DirectoryInfo(path)));
             else
-                Open(new FileViewModel(path));
-            }
+                Open(new FileViewModel(new FileInfo(path)));
+        }
 
         #endregion
 
         #region Commands Methods
 
-        private void Open(object parametr)
+        private void Open(FileEntityViewModel parameter)
         {
-            if (parametr is DirectoryViewModel directoryViewModel)
+            if (parameter is DirectoryViewModel directoryViewModel)
             {
-                FilePath = directoryViewModel.FullName;
+                SearchText = directoryViewModel.FullName;
+                Header = directoryViewModel.Name;
 
-                Name = directoryViewModel.Name;
-
-                _history.Add(FilePath, Name);
+                _history.Add(SearchText, Header);
 
                 OpenDirectory();
-            }else if (parametr is FileViewModel fileViewModel)
+            }
+            else if (parameter is FileViewModel fileViewModel)
             {
                 new Process
                 {
@@ -109,7 +145,6 @@ namespace ExplorER
                         UseShellExecute = true
                     }
                 }.Start();
-
             }
         }
 
@@ -121,8 +156,8 @@ namespace ExplorER
 
             var current = _history.Current;
 
-            FilePath = current.DirectoryPath;
-            Name = current.DirectoryPathName;
+            SearchText = current.DirectoryPath;
+            Header = current.DirectoryPathName;
 
             OpenDirectory();
         }
@@ -135,8 +170,8 @@ namespace ExplorER
 
             var current = _history.Current;
 
-            FilePath = current.DirectoryPath;
-            Name = current.DirectoryPathName;
+            SearchText = current.DirectoryPath;
+            Header = current.DirectoryPathName;
 
             OpenDirectory();
         }
@@ -147,96 +182,35 @@ namespace ExplorER
 
         private void OpenDirectory()
         {
-            if (_backgroundWorker.IsBusy)
-                _backgroundWorker.CancelAsync();
-            else
-                RunWorker();
-        }
-
-        private void RunWorker()
-        {
-            DirectoriesAndFiles.Clear();
-
-            if (Name == "Мой компьютер")
+            if (FilesPresenter != null)
             {
-                foreach (var logicalDrive in Directory.GetLogicalDrives())
-                    DirectoriesAndFiles.Add(new DirectoryViewModel(logicalDrive));
-
-                return;
+                FilesPresenter.DirectoryOrFileOpened -= FilePresenterOnDirectoryOrFileOpened;
+                FilesPresenter.Dispose();
             }
 
-            var directoryInfo = new DirectoryInfo(FilePath);
+            FilesPresenter = _isGridPresenter
+                ? new GridFilesPresenterViewModel(this, CurrentDirectoryFileName)
+                : new TileFilesPresenterViewModel(this, CurrentDirectoryFileName);
 
-            _backgroundWorker.RunWorkerAsync(directoryInfo);
+            FilesPresenter.DirectoryOrFileOpened += FilePresenterOnDirectoryOrFileOpened;
         }
 
-        private void BackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        private void FilePresenterOnDirectoryOrFileOpened(object? sender, OpenDirectoryEventArgs e)
         {
-            if (e.Cancelled)
-            {
-                RunWorker();
-            }
+            Open(e.FileEntityViewModel);
         }
-        private void BackgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-        }
-        private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
-        {
-            var directoryInfo = e.Argument as DirectoryInfo;
 
-            var bw = sender as BackgroundWorker;
-
-            try
-            {
-                var directories = directoryInfo.EnumerateDirectories();
-
-                foreach (var directory in directories)
-                {
-                    if (bw.CancellationPending)
-                    {
-                        e.Cancel = true;
-
-                        return;
-                    }
-
-                    _synchronizationHelper.InvokeAsync(() =>
-                    {
-                        DirectoriesAndFiles.Add(new DirectoryViewModel(directory));
-                    }).Wait();
-
-                }
-                foreach (var fileInfo in directoryInfo.GetFiles())
-                {
-                    if (bw.CancellationPending)
-                    {
-                        e.Cancel = true;
-
-                        return;
-                    }
-
-                    _synchronizationHelper.InvokeAsync(() => { DirectoriesAndFiles.Add(new FileViewModel(fileInfo)); })
-                        .Wait();
-
-                }
-            }
-            catch (Exception ex)
-            {
-                //TODO: Try Exception  
-            }
-
-        }
-        private void History_HistoryChanged(object sender, EventArgs e)
+        private void History_HistoryChanged(object? sender, EventArgs e)
         {
             MoveBackCommand?.RaiseCanExecuteChanged();
             MoveForwardCommand?.RaiseCanExecuteChanged();
         }
 
+        private void SetSearchText(string text)
+        {
+            _searchText = text;
+        }
+
         #endregion
     }
-
-    public interface ISynchronizationHelper
-    {
-        Task InvokeAsync(Action action);
-    }
-
-}   
+}

@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <LangVersion>9</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -9,118 +10,130 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="bookmarks.json">
+    <Compile Update="ExplorerEr.cs">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Resources\Icons\bin.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Icons\Resources\Icons\bin.svg">
+    <None Update="Resources\Icons\dat.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Icons\Resources\Icons\dat.svg">
+    <None Update="Resources\Icons\db.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Icons\Resources\Icons\db.svg">
+    <None Update="Resources\Icons\dll.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Icons\Resources\Icons\dll.svg">
+    <None Update="Resources\Icons\docx.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Icons\Resources\Icons\docx.svg">
+    <None Update="Resources\Icons\flag.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Icons\Resources\Icons\flag.svg">
+    <None Update="Resources\Icons\avi.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Icons\Resources\Icons\avi.svg">
+    <None Update="Resources\Icons\ai.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Icons\Resources\Icons\ai.svg">
+    <None Update="Resources\Icons\aac.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Icons\Resources\Icons\aac.svg">
+    <None Update="Resources\Icons\ini.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Icons\Resources\Icons\ini.svg">
+    <None Update="Resources\Icons\log.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Icons\Resources\Icons\log.svg">
+    <None Update="Resources\Icons\mkv.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Icons\Resources\Icons\mkv.svg">
+    <None Update="Resources\Icons\php.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Icons\Resources\Icons\php.svg">
+    <None Update="Resources\Icons\rar.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Icons\Resources\Icons\rar.svg">
+    <None Update="Resources\Icons\rtf.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Icons\Resources\Icons\rtf.svg">
+    <None Update="Resources\Icons\sys.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Icons\Resources\Icons\sys.svg">
+    <None Update="Resources\Icons\tiff.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Icons\Resources\Icons\tiff.svg">
+    <None Update="Resources\Icons\psd.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Icons\Resources\Icons\psd.svg">
+    <None Update="Resources\Icons\png.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Icons\Resources\Icons\png.svg">
+    <None Update="Resources\Icons\mp3.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Icons\Resources\Icons\mp3.svg">
+    <None Update="Resources\Icons\mov.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Icons\Resources\Icons\mov.svg">
+    <None Update="Resources\Icons\js.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Icons\Resources\Icons\js.svg">
+    <None Update="Resources\Icons\jpg.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Icons\Resources\Icons\jpg.svg">
+    <None Update="Resources\Icons\html.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Icons\Resources\Icons\html.svg">
+    <None Update="Resources\Icons\doc.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Icons\Resources\Icons\doc.svg">
+    <None Update="Resources\Icons\tmp.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Icons\Resources\Icons\tmp.svg">
+    <None Update="Resources\Icons\tpl.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Icons\Resources\Icons\tpl.svg">
+    <None Update="Resources\Icons\xlsx.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Icons\Resources\Icons\xlsx.svg">
+    <None Update="Resources\Icons\xml.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Icons\Resources\Icons\xml.svg">
+    <None Update="Resources\Icons\zip.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Icons\Resources\Icons\zip.svg">
+    <None Update="Resources\Icons\_blank.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Icons\Resources\Icons\_blank.svg">
+    <None Update="Resources\Icons\gif.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Icons\Resources\Icons\gif.svg">
+    <None Update="Resources\Icons\mp4.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Icons\Resources\Icons\mp4.svg">
+    <None Update="Resources\Icons\pdf.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Icons\Resources\Icons\pdf.svg">
+    <None Update="Resources\Icons\txt.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Icons\Resources\Icons\txt.svg">
+    <None Update="Resources\Icons\xls.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Icons\Resources\Icons\xls.svg">
+    <None Update="Resources\Icons\_bookmark_folder.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Icons\Resources\Icons\_folder.svg">
+    <None Update="Resources\Icons\_folder.svg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Icons\_logicalDrive.svg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Icons\_systemDrive.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

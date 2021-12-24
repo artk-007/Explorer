@@ -4,6 +4,7 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
+    <LangVersion>9</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,11 +24,6 @@
 
   <ItemGroup>
     <Resource Include="Assets\back.jpg" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="AttachedProperties\" />
-    <Folder Include="Behaviors\" />
   </ItemGroup>
 
 </Project>

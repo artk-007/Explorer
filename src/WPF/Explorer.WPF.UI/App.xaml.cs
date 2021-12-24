@@ -1,62 +1,56 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Globalization;
+using System.Linq;
 using System.Windows;
+using System.Windows.Markup;
 using ExplorER;
-using GongSolutions.Wpf.DragDrop;
+using Point = System.Drawing.Point;
 
 namespace Explorer.WPF.UI
 {
-    public partial class App 
+    public partial class App
     {
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
 
-            ExplorerEr.CreateExplorerEr(new WpfSynchronizationHelper());
+            FrameworkElement.LanguageProperty.OverrideMetadata(typeof(FrameworkElement),
+                new FrameworkPropertyMetadata(XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.IetfLanguageTag)));
 
-            var mainWindow = new MainWindow();
+            WpfSynchronizationHelper synchronizationHelper = new();
+            
+            ExplorerEr.CreateChromer(synchronizationHelper, new BoundExampleInterTabClient(),
+                ShowNewWindow);
+
+            var mainViewModel = ExplorerEr.Instance.CreateMainViewModel(new DirectoryTabItemViewModel[0]);
+
+            var myCompTabVm = new DirectoryTabItemViewModel(synchronizationHelper, ExplorerEr.RootName, ExplorerEr.RootName);
+
+            mainViewModel.TabItems.Add(myCompTabVm);
+
+            MainWindow mainWindow = new()
+            {
+                DataContext = mainViewModel
+            };
 
             mainWindow.Show();
-        }
-    }
 
-    public class ExplorerDragDrop : IDropTarget
-    {
-        private static IDropTarget _instance;
-        public static IDropTarget Instance => _instance ??= new ExplorerDragDrop(); 
-        public void DragOver(IDropInfo dropInfo)
-        {
-            if (dropInfo.TargetCollection is ObservableCollection<FileEntityViewModel> targetCollection)
-            {
-                if (dropInfo.Data is FileEntityViewModel sourceItem)
-                {
-                    if (dropInfo.TargetItem == null && !targetCollection.Contains(sourceItem))
-                    {
-                        dropInfo.Effects = DragDropEffects.Move;
-                        dropInfo.DropTargetAdorner = DropTargetAdorners.Insert;
-                        dropInfo.EffectText = "Move to";
-                        dropInfo.DestinationText = "В папку";
-                    }
-
-                    if (dropInfo.TargetItem is DirectoryViewModel targetFolder && targetFolder != sourceItem)
-                    {
-                        dropInfo.Effects = DragDropEffects.Move;
-                        dropInfo.DropTargetAdorner = DropTargetAdorners.Highlight;
-                        dropInfo.EffectText = "Move to";
-                        dropInfo.DestinationText = "В папку2";
-                    }
-                }
-
-                if (dropInfo.Data is ICollection<object> sourceItems)
-                {
-
-                }
-            }
+            //DebugWindow debugWindow = new();
+            //debugWindow.Show();
         }
 
-        public void Drop(IDropInfo dropInfo)
+        private static void ShowNewWindow(TabsViewModel mvm, Point location)
         {
+            var activeWindow = Current.Windows.OfType<Window>().FirstOrDefault(w => w.IsActive) ?? Current.MainWindow;
             
+            MainWindow mainWindow = new()
+            {
+                DataContext = mvm,
+                WindowStartupLocation = WindowStartupLocation.Manual,
+                Left = activeWindow.Left + location.X,
+                Top = activeWindow.Top + location.Y
+            };
+
+            mainWindow.Show();
         }
     }
 }

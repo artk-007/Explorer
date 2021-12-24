@@ -6,12 +6,15 @@ namespace ExplorER
 {
     internal class DirectoryHistory : IDirectoryHistory
     {
-        #region Private Fields
+        #region Properties
 
-        private DirectoryNode _head;
+        public bool CanMoveBack => Current.PreviousNode != null;
+        public bool CanMoveForward => Current.NextNode != null;
+
+        public DirectoryNode Current { get; private set; }
 
         #endregion
-        
+
         #region Events
 
         public event EventHandler HistoryChanged;
@@ -22,17 +25,9 @@ namespace ExplorER
 
         public DirectoryHistory(string directoryPath, string directoryPathName)
         {
-            _head = new DirectoryNode(directoryPath, directoryPathName);
-            Current = _head;
+            var head = new DirectoryNode(directoryPath, directoryPathName);
+            Current = head;
         }
-
-        #endregion
-
-        #region Properties
-
-        public bool CanMoveBack => Current.PreviousNode != null;
-        public bool CanMoveForward => Current.NextNode != null;
-        public DirectoryNode Current { get; private set; }
 
         #endregion
 
@@ -52,7 +47,7 @@ namespace ExplorER
             var next = Current.NextNode;
 
             Current = next;
-            
+
             RaiseHistoryChanged();
         }
 
@@ -67,8 +62,9 @@ namespace ExplorER
 
             RaiseHistoryChanged();
         }
-        #endregion
 
+        #endregion
+        
         #region Private Methods
 
         private void RaiseHistoryChanged() => HistoryChanged?.Invoke(this, EventArgs.Empty);

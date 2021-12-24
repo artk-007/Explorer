@@ -6,7 +6,8 @@ namespace ExplorER
     {
         public string Path { get; set; }
 
-        public string BookmarkFolderName { get; set; }
-        public List<BookmarkItem> Children { get; set; }
+        public string BookmarkFolderName { get; set; }  
+
+        public IList<BookmarkItem> Children { get; set; }
     }
 }

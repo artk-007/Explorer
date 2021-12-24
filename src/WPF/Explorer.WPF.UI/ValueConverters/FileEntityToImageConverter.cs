@@ -1,54 +1,59 @@
-﻿using ExplorER;
-using SharpVectors.Converters;
-using SharpVectors.Renderers.Wpf;
-using System;
+﻿using System;
 using System.Globalization;
 using System.Windows.Data;
+using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using ExplorER;
+using ExplorER.FileEntities.Base;
+using SharpVectors.Converters;
+using SharpVectors.Renderers.Wpf;
 
 namespace Explorer.WPF.UI
 {
-    internal class FileEntityToImageConverter : IValueConverter
+    internal class FileEntityToImageConverter : MarkupExtension, IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var drawingImage = new DrawingImage();
+            var dravingImage = new DrawingImage();
 
             if (!(value is FileEntityViewModel viewModel))
-                return drawingImage;
+                return dravingImage;
 
-                var imagePath = ExplorerEr.Instance.IconsManager.GetIconPath(viewModel);
+            var imagePath = ExplorerEr.Instance.IconsManager.GetIconPath(viewModel);
 
-
-                if (imagePath.Extension.ToUpper() == ".SVG")
+            if (imagePath.Extension.ToUpper() == ".SVG")
+            {
+                var settings = new WpfDrawingSettings
                 {
-                    var settings = new WpfDrawingSettings
-                    {
-                        TextAsGeometry = false,
-                        IncludeRuntime = true,
-                            
-                    };
-                    var converter = new FileSvgReader(settings);
+                    TextAsGeometry = false,
+                    IncludeRuntime = true,
+                };
 
-                    var drawing = converter.Read(imagePath.FullName);
+                var converter = new FileSvgReader(settings);
 
-                    if (drawing != null)
-                        return new DrawingImage(drawing);
-                }
-                else
-                {
-                    var bitmapSource = new BitmapImage(new Uri(imagePath.FullName));
-                    return bitmapSource;
-                }
+                var drawing = converter.Read(imagePath.FullName);
 
-                return drawingImage;
+                if (drawing != null)
+                    return new DrawingImage(drawing);
+            }
+            else
+            {
+                var bitmapSource = new BitmapImage(new Uri(imagePath.FullName));
+                return bitmapSource;
+            }
+
+            return dravingImage;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }
-    }
 
+        public override object ProvideValue(IServiceProvider serviceProvider)
+        {
+            return this;
+        }
+    }
 }

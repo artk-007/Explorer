@@ -18,12 +18,11 @@ namespace EXWindow
             double length = 1;
 
             if (parameter is string lengthString)
-            {
                 double.TryParse(lengthString, out length);
-            }
+
             if (value is WindowState windowState)
-                return windowState == WindowState.Normal 
-                    ? new Thickness(length) 
+                return windowState == WindowState.Normal
+                    ? new Thickness(length)
                     : new Thickness(0);
 
             return new Thickness(0);

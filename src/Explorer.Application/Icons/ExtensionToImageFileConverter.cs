@@ -7,8 +7,11 @@ namespace ExplorER
 {
     internal class ExtensionToImageFileConverter
     {
-        private  Dictionary<string, FileInfo> _icons;
-        //private  readonly IconSettings _settings;
+        #region Private Fields
+
+        private readonly Dictionary<string, FileInfo> _icons;
+
+        #endregion
 
         #region Constructor
 
@@ -16,40 +19,30 @@ namespace ExplorER
         {
             var applicationDirectory = AppDomain.CurrentDomain.BaseDirectory;
 
-            var iconsDirectory = new DirectoryInfo(Path.Combine(applicationDirectory, "Icons","Resources", "Icons"));
+            var iconsDirectory = new DirectoryInfo(Path.Combine(applicationDirectory, "Resources", "Icons"));
 
             _icons = iconsDirectory
                 .GetFiles()
-                .ToDictionary(fi => GetNameWithoutExtension(fi.Name));
-
+                .ToDictionary(fi => Path.GetFileNameWithoutExtension(fi.Name).ToUpper());
         }
 
         #endregion
 
         #region Public Methods
+
+        /// <summary>
+        /// Получение полного пути до иконки для заданного расширения
+        /// </summary>
+        /// <param name="extension">Расширение в формате без точки сначала</param>
+        /// <returns></returns>
         public FileInfo GetImagePath(string extension)
         {
-
             if (_icons.ContainsKey(extension.ToUpper()))
-            {
                 return _icons[extension.ToUpper()];
-            }
 
             return _icons[IconName.Blank.ToUpper()];
         }
 
         #endregion
-
-
-        private string GetNameWithoutExtension(string fileName)
-        {
-            var parts = fileName.Split(new[] {'.'});
-            if (parts.Length > 0)
-                return parts[0].ToUpper();
-
-            return "._";
-        }
     }
-
-   
 }

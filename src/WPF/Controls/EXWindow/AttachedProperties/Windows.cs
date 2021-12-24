@@ -29,6 +29,5 @@ namespace EXWindow
         {
             return (WindowState) element.GetValue(WindowStateProperty);
         }
-
     }
 }

@@ -7,8 +7,7 @@ namespace ExplorER
     /// </summary>
     public interface IBookmarksManager
     {
-
-       IReadOnlyCollection<MenuItemViewModel> Bookmarks { get; }
-       DelegateCommand AddBookmarkCommand { get; }
+        IReadOnlyCollection<MenuItemViewModel> Bookmarks { get; }
+        DelegateCommand AddBookmarkCommand { get; }
     }
 }

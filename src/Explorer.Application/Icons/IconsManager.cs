@@ -1,5 +1,8 @@
 ﻿using System;
 using System.IO;
+using System.Runtime.InteropServices;
+using ExplorER.FileEntities;
+using ExplorER.FileEntities.Base;
 
 namespace ExplorER
 {
@@ -11,6 +14,7 @@ namespace ExplorER
         {
             _converter = converter;
         }
+
         public FileInfo GetIconPath(FileEntityViewModel viewModel)
         {
             if (viewModel is FileViewModel fileViewModel)
@@ -21,7 +25,17 @@ namespace ExplorER
 
                 return imagePath;
             }
-            
+
+            if (viewModel is LogicalDriveViewModel logicalDriveViewModel)
+            {
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    if (logicalDriveViewModel.FullName == "C:\\")
+                        return _converter.GetImagePath(IconName.SystemDrive);
+                }
+
+                return _converter.GetImagePath(IconName.LogicalDrive);
+            }
 
             if (viewModel is DirectoryViewModel)
             {
@@ -29,14 +43,11 @@ namespace ExplorER
             }
 
             throw new NotImplementedException();
-            
-
         }
     }
 
     public interface IIconsManager
     {
         FileInfo GetIconPath(FileEntityViewModel viewModel);
-
     }
 }

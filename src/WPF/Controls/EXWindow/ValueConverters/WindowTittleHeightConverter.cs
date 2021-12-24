@@ -6,7 +6,7 @@ using System.Windows.Markup;
 
 namespace EXWindow
 {
-    internal class WindowTittleHeightConverter : MarkupExtension ,IValueConverter
+    internal class WindowTitleHeightConverter : MarkupExtension, IValueConverter
     {
         public override object ProvideValue(IServiceProvider serviceProvider)
         {

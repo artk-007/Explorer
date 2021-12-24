@@ -1,18 +1,22 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using ExplorER.FileEntities.Base;
 
-namespace ExplorER
+namespace ExplorER.FileEntities
 {
-    public sealed class DirectoryViewModel : FileEntityViewModel
-    {       
-       
+    public class DirectoryViewModel : FileEntityViewModel
+    {
+        private readonly DirectoryInfo _directoryName;
 
-        public DirectoryViewModel(string direcrotyName) : base(direcrotyName)
+        public DirectoryViewModel(DirectoryInfo directoryName) : base(directoryName.Name)
         {
-            FullName = direcrotyName;
+            _directoryName = directoryName;
+            FullName = directoryName.FullName;
         }
-        public DirectoryViewModel(DirectoryInfo direcrotyName) : base(direcrotyName.Name)
-        {
-            FullName = direcrotyName.FullName;
-        }
+
+        public override DateTime ChangeDateTime => _directoryName.LastWriteTime;
+
+        public override string GetRootName()
+            => new DirectoryInfo(FullName).Root.Name;
     }
 }
