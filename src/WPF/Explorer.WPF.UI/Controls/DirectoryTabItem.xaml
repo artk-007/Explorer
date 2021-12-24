@@ -5,7 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"            
              xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:ui="clr-namespace:Explorer.WPF.UI"
+             xmlns:dd="urn:gong-wpf-dragdrop"
              mc:Ignorable="d" 
+             
              d:DesignHeight="450" d:DesignWidth="800">
         <UserControl.Resources>
         <ui:FileEntityToImageConverter x:Key="ToImageConverter"></ui:FileEntityToImageConverter>
@@ -26,7 +28,13 @@
                      Background="Transparent"
                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                      HorizontalContentAlignment="Center"
-                     VerticalContentAlignment="Center">
+                     VerticalContentAlignment="Center"
+                     
+                     
+                     dd:DragDrop.IsDragSource="True"
+                     dd:DragDrop.IsDropTarget="True"
+                     dd:DragDrop.DropHandler="{x:Static ui:ExplorerDragDrop.Instance}"
+                     dd:DragDrop.UseDefaultDragAdorner="True">
             
                 <ListBox.ItemContainerStyle>
                 <Style TargetType="{x:Type ListBoxItem}">
@@ -53,6 +61,11 @@
                                             BorderBrush="{TemplateBinding BorderBrush}" 
                                             Padding="{TemplateBinding Padding}" 
                                             SnapsToDevicePixels="true">
+                                        <ContextMenu>
+                                            <MenuItem Header="Открыть"
+                                                      Command="{Binding DataContext.OpenComand,RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}} }"
+                                                      CommandParameter=""/>
+                                        </ContextMenu>
                                         <ContentPresenter Grid.Row="1"
                                                           HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
                                     </Border>

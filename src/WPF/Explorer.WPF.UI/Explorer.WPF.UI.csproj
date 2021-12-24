@@ -11,8 +11,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.37" />
-    <PackageReference Include="SharpVectors.Reloaded" Version="1.7.6" />
+    <PackageReference Include="gong-wpf-dragdrop" Version="3.0.0" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
+    <PackageReference Include="SharpVectors.Reloaded" Version="1.7.7" />
   </ItemGroup>
 
   <ItemGroup>
